@@ -35,27 +35,8 @@
 #	include "stddef.h"
 #endif
 
-//------------------------------------------------------------------
-// NAMESPACE
-//------------------------------------------------------------------
-
-#if defined ( __cplusplus )
-#	ifndef PSL_NO_NAMESPACE
-#		ifndef PSL_NAMESPACE
-#			define PSL_NAMESPACE	pslc
-#		endif
-		namespace PSL_NAMESPACE {
-#		define	_PSL( v ) v
-#		define	_psl( v ) v
-#	endif
-	extern "C" {
-#endif
-
-#ifndef _PSL
-#	define	_PSL( v )	PSL_##v
-#endif
-#ifndef _psl
-#	define	_psl( v )	psl_##v
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 //------------------------------------------------------------------
@@ -63,38 +44,38 @@
 //------------------------------------------------------------------
 
 #ifdef PSL_USE_STDDEF
-	typedef size_t			_PSL(SIZE);
-	typedef wchar_t			_PSL(WCHAR);
-	typedef ptrdiff_t		_PSL(PTRDIFF);
+	typedef size_t			PSL_SIZE;
+	typedef wchar_t			PSL_WCHAR;
+	typedef ptrdiff_t		PSL_PTRDIFF;
 #else
-	typedef long			_PSL(SIZE);
-	typedef char			_PSL(WCHAR);
-	typedef unsigned long	_PSL(PTRDIFF);
+	typedef long			PSL_SIZE;
+	typedef char			PSL_WCHAR;
+	typedef unsigned long	PSL_PTRDIFF;
 #endif
 
-	typedef long			_PSL(INT);
-	typedef char			_PSL(CHAR);
-	typedef void*			_PSL(PVOID);
+	typedef long			PSL_INT;
+	typedef char			PSL_CHAR;
+	typedef void*			PSL_PVOID;
 
 //------------------------------------------------------------------
 // Memory
 //------------------------------------------------------------------
 
 	// Memory allocation functions
-	typedef void		( *_psl(fn_free) )		( _PSL(PVOID) p );
-	typedef _PSL(PVOID) ( *_psl(fn_malloc) ) 	( _PSL(SIZE) sz );
-	typedef _PSL(PVOID) ( *_psl(fn_calloc) ) 	( _PSL(SIZE) items, _PSL(SIZE) sz );
-	typedef _PSL(PVOID) ( *_psl(fn_realloc) )	( _PSL(PVOID) p, _PSL(SIZE) sz );
+	typedef void		( *psl_fn_free )	( PSL_PVOID p );
+	typedef PSL_PVOID	( *psl_fn_malloc )	( PSL_SIZE sz );
+	typedef PSL_PVOID	( *psl_fn_calloc )	( PSL_SIZE items, PSL_SIZE sz );
+	typedef PSL_PVOID	( *psl_fn_realloc )	( PSL_PVOID p, PSL_SIZE sz );
 
 //------------------------------------------------------------------
 // Memory
 //------------------------------------------------------------------
 
 	/// Sets allocation functions for alloc, realloc, free
-	void psl_set_allocation_functions( _psl(fn_malloc) pmalloc, _psl(fn_calloc) pcalloc, _psl(fn_realloc) prealloc, _psl(fn_free) pfree );
+	void psl_set_allocation_functions( psl_fn_malloc pmalloc, psl_fn_calloc pcalloc, psl_fn_realloc prealloc, psl_fn_free pfree );
 
 	/// Free an object
-	void psl_free( _PSL(PVOID) p );
+	void psl_free( PSL_PVOID p );
 
 	/// Allocate space for a new object
 	/**
@@ -105,20 +86,20 @@
 		@param [in] init	-	Set to non-zero if the memory should be initialized
 								to zero.
 	*/
-	void* psl_create( _PSL(SIZE) size, _PSL(INT) type, _psl(fn_free) f, _PSL(INT) init );
+	void* psl_create( PSL_SIZE size, PSL_INT type, psl_fn_free f, PSL_INT init );
 
 	/// Resizes the specified object
 	/**
 		@param [in] p		-	Pointer to the object.
 		@param [in] size	-	New size for the object
 	*/
-	_PSL(PVOID) psl_resize( _PSL(PVOID) p, _PSL(SIZE) size );
+	PSL_PVOID psl_resize( PSL_PVOID p, PSL_SIZE size );
 	
 	/// Returns the type id for the allocated block
 	/**
 		@param [in] p		-	Pointer to the object.
 	*/
-	_PSL(INT) psl_get_block_type( _PSL(PVOID) p );
+	PSL_INT psl_get_block_type( PSL_PVOID p );
 
 	/// Set the block type for the allocated block
 	/**
@@ -126,7 +107,7 @@
 		@param [in] type	-	New block type
 	*/
 	
-	void psl_set_block_type( _PSL(PVOID) p, _PSL(INT) type );
+	void psl_set_block_type( PSL_PVOID p, PSL_INT type );
 	
 	/// Adds a reference to the memory block
 	/**
@@ -134,7 +115,7 @@
 		
 		@return The previous reference count
 	*/
-	_PSL(INT) psl_add_ref( _PSL(PVOID) p );
+	PSL_INT psl_add_ref( PSL_PVOID p );
 
 	/// Returns the reference count on the memory block
 	/**
@@ -142,15 +123,12 @@
 		
 		@return The current reference count
 	*/
-	_PSL(INT) psl_get_ref( _PSL(PVOID) p );
+	PSL_INT psl_get_ref( PSL_PVOID p );
 
 //------------------------------------------------------------------
 // Data types
 //------------------------------------------------------------------
 
-#if defined ( __cplusplus )
-	}
-#	ifndef PSL_NO_NAMESPACE
-	}
-#	endif
+#ifdef __cplusplus
+}
 #endif

@@ -11,46 +11,46 @@
 
 int run()
 {
-	pslc::PVOID pObj = pslc::psl_create( 128, 0x1234, 0, 0 );
+	PSL_PVOID pObj = psl_create( 128, 0x1234, 0, 0 );
 	if ( !pObj )
-	{	printf( "pslc::create() failed\n" );
+	{	printf( "psl_create() failed\n" );
 		return -1;
 	} // end if
 
-	if ( 1 != pslc::psl_get_ref( pObj ) )
-	{	printf( "pslc::psl_get_ref() != 1\n" );
+	if ( 1 != psl_get_ref( pObj ) )
+	{	printf( "psl_get_ref() != 1\n" );
 		return -1;
 	} // end if
 
 	*(unsigned long*)pObj = 0x12345678;
-	printf( "Memory at 0x%x -> 0x%x\n", (unsigned long)pObj, (unsigned long)*(unsigned long*)pObj );
+	printf( "Memory at 0x%x -> 0x%x\n", (unsigned int)pObj, (unsigned int)*(unsigned long*)pObj );
 	
-	printf( "Block type before set = 0x%x\n", (unsigned long)pslc::psl_get_block_type( pObj ) );
-	if ( 0x1234 != pslc::psl_get_block_type( pObj ) )
+	printf( "Block type before set = 0x%x\n", (unsigned int)psl_get_block_type( pObj ) );
+	if ( 0x1234 != psl_get_block_type( pObj ) )
 	{	printf( "pslc::psl_get_block_type() != 0x1234\n" );
 		return -1;
 	} // end if
 
-	pslc::psl_set_block_type( pObj, 0x5678 );	
+	psl_set_block_type( pObj, 0x5678 );	
 	
-	printf( "Block type after set = 0x%x\n", (unsigned long)pslc::psl_get_block_type( pObj ) );
-	if ( 0x5678 != pslc::psl_get_block_type( pObj ) )
-	{	printf( "pslc::psl_get_block_type() != 0x5678\n" );
+	printf( "Block type after set = 0x%x\n", (unsigned int)psl_get_block_type( pObj ) );
+	if ( 0x5678 != psl_get_block_type( pObj ) )
+	{	printf( "psl_get_block_type() != 0x5678\n" );
 		return -1;
 	} // end if
 	
 	// Disrupt the heap
-	pslc::PVOID pObj2 = pslc::psl_create( 128, 0x1234, 0, 0 );
+	PSL_PVOID pObj2 = psl_create( 128, 0x1234, 0, 0 );
 
 	// Resize the block
-	pObj = pslc::psl_resize( pObj, 256 );
+	pObj = psl_resize( pObj, 256 );
 	if ( !pObj )
-	{	printf( "pslc::psl_resize() failed\n" );
+	{	printf( "psl_resize() failed\n" );
 		return -1;
 	} // end if
 
 	// Just show the memory again
-	printf( "Memory at 0x%x -> 0x%x\n", (unsigned long)pObj, (unsigned long)*(unsigned long*)pObj );
+	printf( "Memory at 0x%x -> 0x%x\n", (unsigned int)pObj, (unsigned int)*(unsigned long*)pObj );
 
 	// Make sure data was preserved
 	if ( *(unsigned long*)pObj != 0x12345678 )
@@ -66,9 +66,9 @@ int run()
 //	*( (char*)pObj + 128 + 4 ) = 0xff;
 
 	// Free the memory
-	pslc::psl_free( pObj );
+	psl_free( pObj );
 
-	pslc::psl_free( pObj2 );
+	psl_free( pObj2 );
 
 	printf( "success\n" );
 	

@@ -32,7 +32,8 @@
 //----------------------------------------------------------------*/
 
 #include "libpslc/libpslc_internal.h"
-#include "stdlib.h"
+#include <stdlib.h>
+#include <string.h>
 
 //------------------------------------------------------------------
 // Memory
