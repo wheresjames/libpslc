@@ -1,0 +1,1 @@
+This library will provide a set of data primitives for interfacing C API with scripting languages.
